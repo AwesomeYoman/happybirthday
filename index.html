@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>給 Christina 的禮物 🎁</title>
+
+<style>
+body{
+  margin:0;
+  background:#111;
+  color:#fff;
+  font-family:"Microsoft JhengHei",sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.card{
+  width:92vw;
+  max-width:420px;
+  background:#1c1c1c;
+  padding:clamp(16px,4vw,24px);
+  border-radius:18px;
+  text-align:center;
+}
+
+h1{font-size:clamp(22px,6vw,28px);}
+h2{font-size:clamp(18px,5vw,22px);}
+p, #feedback{
+  font-size:clamp(14px,4vw,16px);
+}
+
+button{
+  width:100%;
+  background:#ff6b81;
+  border:none;
+  color:#fff;
+  padding:clamp(12px,4vw,16px);
+  border-radius:12px;
+  font-size:clamp(16px,4.5vw,18px);
+  cursor:pointer;
+}
+
+img{
+  width:100%;
+  max-height:45vh;
+  object-fit:cover;
+  border-radius:14px;
+  margin:14px 0;
+}
+
+.option{
+  background:#333;
+  padding:clamp(12px,4vw,16px);
+  margin:10px 0;
+  border-radius:12px;
+  font-size:clamp(15px,4.5vw,17px);
+  cursor:pointer;
+}
+
+.option.disabled{
+  pointer-events:none;
+  opacity:.5;
+}
+
+#feedback{
+  margin-top:10px;
+  color:#ffb6c1;
+  min-height:2.5em;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgm" loop>
+  <source src="music.m4a" type="audio/mp4">
+</audio>
+
+<!-- 封面 -->
+<div class="card" id="cover">
+  <h1>🎁 給 Christina</h1>
+  <p>這不是測驗<br>是我為妳準備的回憶</p>
+  <button onclick="start()">點開禮物</button>
+</div>
+
+<!-- 題目 -->
+<div class="card" id="quiz" style="display:none;">
+  <h2 id="question"></h2>
+  <img id="photo">
+  <div id="options"></div>
+  <div id="feedback"></div>
+</div>
+
+<script>
+const quiz = [
+ {q:"我們第一次見面是什麼時候？",
+  options:["2024/07/10","2024/07/12","2024/07/14"],
+  correct:1, img:"q1.jpg",
+  msg:"那一天，我一直記得。"},
+
+ {q:"我最喜歡吃什麼？",
+  options:["火鍋","便當","拉麵"],
+  correct:1, img:"q2.jpg",
+  msg:"哈哈哈哈哈哈哈:>"},
+
+ {q:"我最喜歡妳的什麼？",
+  options:["笑容","溫柔","全部"],
+  correct:2, img:"q3.jpg",
+  msg:"怎麼選，答案都是你。"},
+
+ {q:"是誰幫我牽起紅線？",
+  options:["朋友","林小兵（帥哥）","同事"],
+  correct:1, img:"q4.jpg",
+  msg:"謝謝那一次的相遇。"},
+
+ {q:"誰一直在我們之間幫助我們？",
+  options:["布哥s","命運","沒有人"],
+  correct:0, img:"q5.jpg",
+  msg:"因為有人在守著我們。"},
+
+ {q:"下一次最想一起去的國家？",
+  options:["日本","韓國","泰國"],
+  correct:1, img:"q6.jpg",
+  msg:"只要是跟你。"},
+
+ {q:"哪一刻我特別想你？",
+  options:["晚上","想起你的時候","每分每秒"],
+  correct:2, img:"q7.jpg",
+  msg:"想你不是選項，是事實。"},
+
+ {q:"誰是我的告白幫手娃娃？",
+  options:["熊熊","新兵","兔子"],
+  correct:1, img:"q8.jpg",
+  msg:"連它都知道我多認真。"},
+
+ {q:"我們的紀念日是？",
+  options:["06/12","07/12","08/12"],
+  correct:1, img:"q9.jpg",
+  msg:"這一天，改變了我。"},
+
+ {q:"你對我來說是？",
+  options:["重要的人","喜歡的人","想走一輩子的人"],
+  correct:2, img:"q10.jpg",
+  msg:"答案只有你。" }
+];
+
+let current = 0;
+
+function start(){
+  cover.style.display="none";
+  quizBox.style.display="block";
+  bgm.play();
+  showQuestion();
+}
+
+const cover = document.getElementById("cover");
+const quizBox = document.getElementById("quiz");
+const bgm = document.getElementById("bgm");
+
+function showQuestion(){
+  const q = quiz[current];
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("photo").src = q.img;
+  document.getElementById("feedback").textContent = "";
+
+  const opt = document.getElementById("options");
+  opt.innerHTML = "";
+
+  q.options.forEach((t,i)=>{
+    const d = document.createElement("div");
+    d.className="option";
+    d.textContent = t;
+    d.onclick = ()=>answer(i);
+    opt.appendChild(d);
+  });
+}
+
+function answer(i){
+  document.querySelectorAll(".option")
+    .forEach(o=>o.classList.add("disabled"));
+
+  document.getElementById("feedback").textContent = quiz[current].msg;
+
+  setTimeout(()=>{
+    current++;
+    if(current < quiz.length){
+      showQuestion();
+    }else{
+      quizBox.innerHTML = `
+        <h2>🎂 Christina</h2>
+        <p>不管你答對幾題</p>
+        <p>我都選你 ❤️</p>`;
+    }
+  },1500);
+}
+</script>
+
+</body>
+</html>
